@@ -1,9 +1,23 @@
 import keras
+import numpy as np
 import tensorflow as tf
 import matplotlib.pyplot as plt
 
 # 得到最常出现的10000个词.舍弃一些较为稀少的词
-(train_data, train_label), (test_data, test_label) = keras.datasets.imdb.load_data(path='../datasets/imdb.npz', )
+NUM_WORDS = 10000
+(train_data, train_label), (test_data, test_label) = keras.datasets.imdb.load_data(num_words=NUM_WORDS)
+
+
+# transfer into multi-hot-encode
+def multi_hot_sequence(sequences, dimension):
+    result = np.zeros((len(sequences), dimension))
+    for i, index in enumerate(sequences):
+        result[i, index] = 1.0
+    return result
+
+
+train_data = multi_hot_sequence(train_data, NUM_WORDS)
+test_data = multi_hot_sequence(test_data, NUM_WORDS)
 
 # dictionary
 word_index = keras.datasets.imdb.get_word_index(path='../datasets/imdb_word_index.json')
